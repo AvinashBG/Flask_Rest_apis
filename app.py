@@ -5,6 +5,7 @@ from resources.users import UserRegister
 from security import authenticate, identity as identity_function
 from resources.items import Items, Item
 from resources.store import StoreList, Store
+import os
 
 app = Flask(__name__)
 api = Api(app)
@@ -13,7 +14,9 @@ app.config["JWT_AUTH_URL_RULE"] = "/login"
 app.config["JWT_EXPIRATION_DELTA"] = timedelta(seconds=1800)
 app.config["JWT_AUTH_USERNAME_KEY"] = "email"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+    "DATABASE_URL", "sqlite:///data.db"
+)
 jwt = JWT(app, authenticate, identity_function)
 
 
